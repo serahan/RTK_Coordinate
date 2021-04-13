@@ -29,7 +29,7 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG ="MainActivity";
+    String TAG = "MainActivity";
     UUID BT_MODULE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // "random" unique identifier
 
     TextView textStatus;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         btnSend = (Button) findViewById(R.id.btn_send);
         listView = (ListView) findViewById(R.id.listview);
 
-        // show paired devices
+        // Show paired devices
         btArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         deviceAddressArray = new ArrayList<>();
         listView.setAdapter(btArrayAdapter);
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     deviceAddressArray.clear();
                 }
                 IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(receiver, filter)
+                registerReceiver(receiver, filter);
             } else {
                 Toast.makeText(getApplicationContext(), "bluetooth not on", Toast.LENGTH_SHORT).show();
             }
@@ -143,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(receiver);
     }
 
-    private class myOnItemClickListener implements android.widget.AdapterView.OnItemClickListener {
+    public class myOnItemClickListener implements AdapterView.OnItemClickListener {
+
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Toast.makeText(getApplicationContext(), btArrayAdapter.getItem(position), Toast.LENGTH_SHORT).show();
@@ -166,11 +167,13 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            // start bluetooth communication
             if(flag){
                 textStatus.setText("connected to "+name);
                 connectedThread = new ConnectedThread(btSocket);
                 connectedThread.start();
             }
+
         }
     }
 
