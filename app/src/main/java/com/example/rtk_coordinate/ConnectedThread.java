@@ -17,8 +17,8 @@ public class ConnectedThread extends Thread {
     private InputStreamReader isReader;
     private BufferedReader reader;
     private StringBuffer sb = new StringBuffer();
-    String latitude = "";
-    String longitude = "";
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
     public ConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
@@ -60,9 +60,9 @@ public class ConnectedThread extends Thread {
                     isReader = new InputStreamReader(mmInStream);
                     reader = new BufferedReader(isReader);
                     while((str = reader.readLine())!=null) {
-                        Log.d("TAG:readStream", "readStream : " + str + "\n");
+//                        Log.d("TAG:readStream", "readStream : " + str + "\n");
                         if (str.contains("GPGGA") || str.contains("GNGGA")) { // GPGGA, GNGGA를 포함하고 있는 경우
-//                            Log.d("TAG:readStream", "readStream : " + str + "\n");
+                            Log.d("TAG:readStream", "readStream : " + str + "\n");
 
                             splitData = str.split(",");
 
@@ -74,13 +74,13 @@ public class ConnectedThread extends Thread {
                             up = Double.parseDouble(splitData[2].substring(0, 2));               // 35.00 double
                             down = Double.parseDouble(splitData[2].substring(2));          // 56.67005 double
                             down /= 60;
-                            latitude = Double.toString(up + down);
+                            latitude = up + down;
 
                             // 경도 계산
                             up = Double.parseDouble(splitData[4].substring(0,3));
                             down = Double.parseDouble(splitData[4].substring(3));
                             down /= 60;
-                            longitude = Double.toString(up + down);
+                            longitude = up + down;
 
                             Log.d("TAG:test", "latitude : " + latitude);
                             Log.d("TAG:test", "longitude : " + longitude);
