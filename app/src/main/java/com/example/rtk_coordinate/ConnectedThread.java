@@ -3,6 +3,9 @@ package com.example.rtk_coordinate;
 import android.bluetooth.BluetoothSocket;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;

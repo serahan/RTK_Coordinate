@@ -33,7 +33,12 @@ public class MainActivity extends AppCompatActivity {
     UUID BT_MODULE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // "random" unique identifier
 
     TextView textStatus;
+    TextView textviewAccuracy;
+    TextView textviewGNSS;
+    TextView textviewCoordinate;
     Button btnParied;
+    Button buttonRecalculate;
+    Button buttonMode;
     ListView listView;
 
     BluetoothAdapter btAdapter;
@@ -67,7 +72,12 @@ public class MainActivity extends AppCompatActivity {
         // variables
         textStatus = (TextView) findViewById(R.id.text_status);
         btnParied = (Button) findViewById(R.id.btn_paired);
+        buttonRecalculate = (Button) findViewById(R.id.buttonRecalculate);
+        buttonMode = (Button) findViewById(R.id.buttonMode);
         listView = (ListView) findViewById(R.id.listview);
+        textviewAccuracy = (TextView) findViewById(R.id.textviewAccuracy);
+        textviewGNSS = (TextView) findViewById(R.id.textviewGNSS);
+        textviewCoordinate = (TextView) findViewById(R.id.textviewCoordinate);
 
         // Show paired devices
         btArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
