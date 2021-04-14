@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     UUID BT_MODULE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // "random" unique identifier
 
     TextView textStatus;
-    Button btnParied, btnSearch, btnSend;
+    Button btnParied;
     ListView listView;
 
     BluetoothAdapter btAdapter;
@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
         // variables
         textStatus = (TextView) findViewById(R.id.text_status);
         btnParied = (Button) findViewById(R.id.btn_paired);
-//        btnSearch = (Button) findViewById(R.id.btn_search);
-//        btnSend = (Button) findViewById(R.id.btn_send);
         listView = (ListView) findViewById(R.id.listview);
 
         // Show paired devices
@@ -80,9 +78,11 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new myOnItemClickListener());
     }
 
-    public void onClickButtonPaired(View view){
+    public void onClickButtonPaired(View view) {
         btArrayAdapter.clear();
-        if(deviceAddressArray!=null && !deviceAddressArray.isEmpty()){ deviceAddressArray.clear(); }
+        if (deviceAddressArray != null && !deviceAddressArray.isEmpty()) {
+            deviceAddressArray.clear();
+        }
         pairedDevices = btAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
             // There are paired devices. Get the name and address of each paired device.
@@ -93,56 +93,8 @@ public class MainActivity extends AppCompatActivity {
                 deviceAddressArray.add(deviceHardwareAddress);
             }
         }
+
     }
-
-    // Create a BroadcastReceiver for ACTION_FOUND.
-//    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-//            public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-//                // Discovery has found a device. Get the BluetoothDevice
-//                // object and its info from the Intent.
-//                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-//                String deviceName = device.getName();
-//                String deviceHardwareAddress = device.getAddress(); // MAC address
-//                btArrayAdapter.add(deviceName);
-//                deviceAddressArray.add(deviceHardwareAddress);
-//                btArrayAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    };
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//
-//        // Don't forget to unregister the ACTION_FOUND receiver.
-//        unregisterReceiver(receiver);
-//    }
-
-    //    public void onClickButtonSearch(View view){
-//        // Check if the device is already discovering
-//        if(btAdapter.isDiscovering()){
-//            btAdapter.cancelDiscovery();
-//        } else {
-//            if (btAdapter.isEnabled()) {
-//                btAdapter.startDiscovery();
-//                btArrayAdapter.clear();
-//                if (deviceAddressArray != null && !deviceAddressArray.isEmpty()) {
-//                    deviceAddressArray.clear();
-//                }
-//                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-//                registerReceiver(receiver, filter);
-//            } else {
-//                Toast.makeText(getApplicationContext(), "bluetooth not on", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
-
-    // Send string "a"
-//    public void onClickButtonSend(View view){
-//        if(connectedThread!=null){ connectedThread.write("a"); }
-//    }
 
     public class myOnItemClickListener implements AdapterView.OnItemClickListener {
 
@@ -169,10 +121,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // start bluetooth communication
-            if(flag){
-                textStatus.setText("connected to "+name);
+            if (flag) {
+                textStatus.setText("CONNECTED TO " + name);
                 connectedThread = new ConnectedThread(btSocket);
                 connectedThread.start();
+                listView.setVisibility(View.GONE);
+
             }
 
         }
@@ -183,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
             final Method m = device.getClass().getMethod("createInsecureRfcommSocketToServiceRecord", UUID.class);
             return (BluetoothSocket) m.invoke(device, BT_MODULE_UUID);
         } catch (Exception e) {
-            Log.e(TAG, "Could not create Insecure RFComm Connection",e);
+            Log.e(TAG, "Could not create Insecure RFComm Connection", e);
         }
-        return  device.createRfcommSocketToServiceRecord(BT_MODULE_UUID);
+        return device.createRfcommSocketToServiceRecord(BT_MODULE_UUID);
     }
 }
