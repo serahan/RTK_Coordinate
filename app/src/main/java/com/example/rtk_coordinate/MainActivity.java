@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         // variables
         textStatus = (TextView) findViewById(R.id.text_status);
         btnParied = (Button) findViewById(R.id.btn_paired);
-        btnSearch = (Button) findViewById(R.id.btn_search);
-        btnSend = (Button) findViewById(R.id.btn_send);
+//        btnSearch = (Button) findViewById(R.id.btn_search);
+//        btnSend = (Button) findViewById(R.id.btn_send);
         listView = (ListView) findViewById(R.id.listview);
 
         // Show paired devices
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         deviceAddressArray = new ArrayList<>();
         listView.setAdapter(btArrayAdapter);
 
+        // 통신
         listView.setOnItemClickListener(new myOnItemClickListener());
     }
 
@@ -94,54 +95,54 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickButtonSearch(View view){
-        // Check if the device is already discovering
-        if(btAdapter.isDiscovering()){
-            btAdapter.cancelDiscovery();
-        } else {
-            if (btAdapter.isEnabled()) {
-                btAdapter.startDiscovery();
-                btArrayAdapter.clear();
-                if (deviceAddressArray != null && !deviceAddressArray.isEmpty()) {
-                    deviceAddressArray.clear();
-                }
-                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(receiver, filter);
-            } else {
-                Toast.makeText(getApplicationContext(), "bluetooth not on", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+    // Create a BroadcastReceiver for ACTION_FOUND.
+//    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+//            public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+//                // Discovery has found a device. Get the BluetoothDevice
+//                // object and its info from the Intent.
+//                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//                String deviceName = device.getName();
+//                String deviceHardwareAddress = device.getAddress(); // MAC address
+//                btArrayAdapter.add(deviceName);
+//                deviceAddressArray.add(deviceHardwareAddress);
+//                btArrayAdapter.notifyDataSetChanged();
+//            }
+//        }
+//    };
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        // Don't forget to unregister the ACTION_FOUND receiver.
+//        unregisterReceiver(receiver);
+//    }
+
+    //    public void onClickButtonSearch(View view){
+//        // Check if the device is already discovering
+//        if(btAdapter.isDiscovering()){
+//            btAdapter.cancelDiscovery();
+//        } else {
+//            if (btAdapter.isEnabled()) {
+//                btAdapter.startDiscovery();
+//                btArrayAdapter.clear();
+//                if (deviceAddressArray != null && !deviceAddressArray.isEmpty()) {
+//                    deviceAddressArray.clear();
+//                }
+//                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+//                registerReceiver(receiver, filter);
+//            } else {
+//                Toast.makeText(getApplicationContext(), "bluetooth not on", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
     // Send string "a"
-    public void onClickButtonSend(View view){
-        if(connectedThread!=null){ connectedThread.write("a"); }
-    }
-
-    // Create a BroadcastReceiver for ACTION_FOUND.
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Discovery has found a device. Get the BluetoothDevice
-                // object and its info from the Intent.
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress(); // MAC address
-                btArrayAdapter.add(deviceName);
-                deviceAddressArray.add(deviceHardwareAddress);
-                btArrayAdapter.notifyDataSetChanged();
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // Don't forget to unregister the ACTION_FOUND receiver.
-        unregisterReceiver(receiver);
-    }
+//    public void onClickButtonSend(View view){
+//        if(connectedThread!=null){ connectedThread.write("a"); }
+//    }
 
     public class myOnItemClickListener implements AdapterView.OnItemClickListener {
 
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Toast.makeText(getApplicationContext(), btArrayAdapter.getItem(position), Toast.LENGTH_SHORT).show();
 
-            textStatus.setText("try...");
+            textStatus.setText("Connecting...");
 
             final String name = btArrayAdapter.getItem(position); // get name
             final String address = deviceAddressArray.get(position); // get address

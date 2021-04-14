@@ -2,6 +2,7 @@ package com.example.rtk_coordinate;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.SystemClock;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +15,8 @@ public class ConnectedThread extends Thread {
 
     public ConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
-        InputStream tmpIn = null;
-        OutputStream tmpOut = null;
+        InputStream tmpIn = null;       // 읽는 데 사용
+        OutputStream tmpOut = null;     // 쓰는 데 사용
 
         // Get the input and output streams, using temp objects because
         // member streams are final
@@ -43,6 +44,7 @@ public class ConnectedThread extends Thread {
                     SystemClock.sleep(100); //pause and wait for rest of data. Adjust this depending on your sending speed.
                     bytes = mmInStream.available(); // how many bytes are ready to be read?
                     bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
+                    Log.d("TAG:readStream", "readStream : " + bytes);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
