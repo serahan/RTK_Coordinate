@@ -17,8 +17,11 @@ public class ConnectedThread extends Thread {
     private InputStreamReader isReader;
     private BufferedReader reader;
     private StringBuffer sb = new StringBuffer();
+    private double PUBLIC_LATITUDE = 35.9427195389;
+    private double PUBLIC_LONGITUDE = 126.68026195;
     private double latitude = 0.0;
     private double longitude = 0.0;
+
 
     public ConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
@@ -84,6 +87,8 @@ public class ConnectedThread extends Thread {
 
                             Log.d("TAG:test", "latitude : " + latitude);
                             Log.d("TAG:test", "longitude : " + longitude);
+
+                            distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
                         }
                     }
                 }
@@ -110,5 +115,24 @@ public class ConnectedThread extends Thread {
             mmSocket.close();
         } catch (IOException e) {
         }
+    }
+
+    public static double distanceByHaversine(double lat1, double longi1, double lat2, double longi2) {
+        double distance;
+        double radius = 6371;   // 지구 반지름(km)
+        double toRadian = Math.PI / 180;
+
+        double deltaLatitude = Math.abs(lat1 - lat2) * toRadian;
+        double deltaLongitude = Math.abs(longi1 - longi2) * toRadian;
+
+        double sinDeltaLat = Math.sin(deltaLatitude / 2);
+        double sinDeltaLng = Math.sin(deltaLongitude / 2);
+        double squareRoot = Math.sqrt(sinDeltaLat * sinDeltaLat + Math.cos(lat1 * toRadian) * Math.cos(lat2 * toRadian) * sinDeltaLng * sinDeltaLng);
+
+        distance = 2 * radius * Math.asin(squareRoot);
+
+        Log.d("TAG:distance", "distance : " + distance);
+
+        return distance;
     }
 }
