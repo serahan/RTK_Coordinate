@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -11,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConnectedThread extends Thread {
     private final BluetoothSocket mmSocket;
@@ -24,7 +28,11 @@ public class ConnectedThread extends Thread {
     private double latitude = 0.0;
     private double longitude = 0.0;
     private double distance = 0.0;
+    private double calculateLatitude = 0.0;
+    private double calculateLongitude = 0.0;
     static Context mMain;
+    List<Double> listLatitude = new ArrayList<>();
+    List<Double> listLongitude = new ArrayList<>();
 
     public static void InitExam(Context main) {
         mMain = main;
@@ -98,12 +106,41 @@ public class ConnectedThread extends Thread {
                             Log.d("TAG:test", "latitude : " + latitude);
                             Log.d("TAG:test", "longitude : " + longitude);
 
-                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewCoordinate)).setText("위도 : " + latitude + "\n" + "경도 : " + longitude);
+                            listLatitude.add(new Double(latitude));
+                            listLongitude.add(new Double(longitude));
 
-                            distance = distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
-                            String strDistance = Double.toString(distance);
-                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + strDistance.substring(2, 5) + "." + strDistance.substring(5, 7) + "m");
+                            if(((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("고정 모드")) {
+
+                            } else if(((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("일반 모드")) {
+                                ((TextView) ((Activity) mMain).findViewById(R.id.textviewCoordinate)).setText("위도 : " + latitude + "\n" + "경도 : " + longitude);
+
+                                distance = distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
+                                String strDistance = Double.toString(distance);
+                                ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + strDistance.substring(2, 5) + "." + strDistance.substring(5, 7) + "m");
 //                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + distance);
+                            }
+
+                            ((TextView) ((Activity) mMain).findViewById(R.id.buttonRecalculate)).setOnClickListener(new Button.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.d("TAG:Recalculate", "================================클릭-끝================================");
+                                    for(int i=0;i<listLatitude.size();i++) {
+                                        calculateLatitude += listLatitude.get(i);
+                                        calculateLongitude += listLongitude.get(i);
+                                    }
+                                    calculateLatitude /= listLatitude.size();
+                                    calculateLongitude /= listLongitude.size();
+
+                                    Log.d("TAG:Recalculate", "latitude : " + calculateLatitude);
+                                    Log.d("TAG:Recalculate", "longitude : " + calculateLongitude);
+                                    distance = distanceByHaversine(calculateLatitude, calculateLongitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
+                                    String strDistance = Double.toString(distance);
+
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewCoordinate)).setText("위도 : " + calculateLatitude + "\n" + "경도 : " + calculateLongitude);
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + strDistance.substring(2, 5) + "." + strDistance.substring(5, 7) + "m");
+                                }
+                            });
+
                         }
                     }
                 }

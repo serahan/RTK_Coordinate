@@ -87,6 +87,22 @@ public class MainActivity extends AppCompatActivity {
         deviceAddressArray = new ArrayList<>();
         listView.setAdapter(btArrayAdapter);
 
+        // 버튼 클릭 리스너
+        buttonMode.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(buttonMode.getText().equals("고정 모드")) {
+                    buttonMode.setText("일반 모드");
+                    buttonRecalculate.setEnabled(false);
+                    Log.d("TAG:Recalculate", "=======================================================================");
+                } else if(buttonMode.getText().equals("일반 모드")) {
+                    buttonMode.setText("고정 모드");
+                    buttonRecalculate.setEnabled(true);
+                    Log.d("TAG:Recalculate", "================================클릭-시작================================");
+                }
+            }
+        });
+
         // 통신
         listView.setOnItemClickListener(new myOnItemClickListener());
     }
