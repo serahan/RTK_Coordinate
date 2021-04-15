@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ConnectedThread.InitExam(this);
 
         // Get permission
         String[] permission_list = {
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
+    public BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
         try {
             final Method m = device.getClass().getMethod("createInsecureRfcommSocketToServiceRecord", UUID.class);
             return (BluetoothSocket) m.invoke(device, BT_MODULE_UUID);

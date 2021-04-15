@@ -1,10 +1,9 @@
 package com.example.rtk_coordinate;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
-import android.os.SystemClock;
+import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -19,12 +18,17 @@ public class ConnectedThread extends Thread {
     private final OutputStream mmOutStream;
     private InputStreamReader isReader;
     private BufferedReader reader;
-    private StringBuffer sb = new StringBuffer();
+
     private double PUBLIC_LATITUDE = 35.9427195389;
     private double PUBLIC_LONGITUDE = 126.68026195;
     private double latitude = 0.0;
     private double longitude = 0.0;
+    private double distance = 0.0;
+    static Context mMain;
 
+    public static void InitExam(Context main) {
+        mMain = main;
+    }
 
     public ConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
@@ -69,6 +73,9 @@ public class ConnectedThread extends Thread {
 //                        Log.d("TAG:readStream", "readStream : " + str + "\n");
                         if (str.contains("GPGGA") || str.contains("GNGGA")) { // GPGGA, GNGGA를 포함하고 있는 경우
                             Log.d("TAG:readStream", "readStream : " + str + "\n");
+                            if(((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).getText().equals("NO FIX")) {
+                                ((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).setText("3D FIX");
+                            }
 
                             splitData = str.split(",");
 
@@ -91,7 +98,12 @@ public class ConnectedThread extends Thread {
                             Log.d("TAG:test", "latitude : " + latitude);
                             Log.d("TAG:test", "longitude : " + longitude);
 
-                            distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
+                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewCoordinate)).setText("위도 : " + latitude + "\n" + "경도 : " + longitude);
+
+                            distance = distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
+                            String strDistance = Double.toString(distance);
+                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + strDistance.substring(2, 5) + "." + strDistance.substring(5, 7) + "m");
+//                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + distance);
                         }
                     }
                 }
@@ -121,6 +133,8 @@ public class ConnectedThread extends Thread {
     }
 
     public static double distanceByHaversine(double lat1, double longi1, double lat2, double longi2) {
+        // 공식에서는 지구가 완전한 구형이라고 가정
+        // 실제 지구는 적도 쪽이 좀 더 길쭉한 타원형이라 완벽히 정확하다 할 수 없음
         double distance;
         double radius = 6371;   // 지구 반지름(km)
         double toRadian = Math.PI / 180;
