@@ -117,6 +117,9 @@ public class ConnectedThread extends Thread {
                                 distance = distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
                                 String strDistance = Double.toString(distance);
                                 ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + strDistance.substring(2, 5) + "." + strDistance.substring(5, 7) + "m");
+
+                                //TODO : . 이후 값 다섯개만 가져오도록 수정
+
 //                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + distance);
                             }
 
