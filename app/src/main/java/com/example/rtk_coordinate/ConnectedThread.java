@@ -77,6 +77,7 @@ public class ConnectedThread extends Thread {
 //                    Log.d("TAG:readStream", "readStream : " + bytes);
                     isReader = new InputStreamReader(mmInStream);
                     reader = new BufferedReader(isReader);
+
                     while((str = reader.readLine())!=null) {
 //                        Log.d("TAG:readStream", "readStream : " + str + "\n");
                         if (str.contains("GPGGA") || str.contains("GNGGA")) { // GPGGA, GNGGA를 포함하고 있는 경우
@@ -92,8 +93,8 @@ public class ConnectedThread extends Thread {
 //                            }
 
                             // 위도 계산
-                            up = Double.parseDouble(splitData[2].substring(0, 2));               // 35.00 double
-                            down = Double.parseDouble(splitData[2].substring(2));          // 56.67005 double
+                            up = Double.parseDouble(splitData[2].substring(0, 2));              // 35.00 double
+                            down = Double.parseDouble(splitData[2].substring(2));               // 56.67005 double
                             down /= 60;
                             latitude = up + down;
 
@@ -110,15 +111,23 @@ public class ConnectedThread extends Thread {
                             listLongitude.add(new Double(longitude));
 
                             if(((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("고정 모드")) {
-
+                                // do nothing
                             } else if(((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("일반 모드")) {
                                 ((TextView) ((Activity) mMain).findViewById(R.id.textviewCoordinate)).setText("위도 : " + latitude + "\n" + "경도 : " + longitude);
-
                                 distance = distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
-                                String strDistance = Double.toString(distance);
-                                ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + strDistance.substring(2, 5) + "." + strDistance.substring(5, 7) + "m");
 
-                                //TODO : . 이후 값 다섯개만 가져오도록 수정
+                                String strDistance = Double.toString(distance);
+
+                                // 소수점 탐색
+                                int dot = strDistance.indexOf(".");
+
+                                if(distance >= 1) {
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText(strDistance.substring(0, dot) + "." + strDistance.substring(dot+1, dot+3) +"km");
+                                } else if((distance >= 0.001) && (distance < 1)) {
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText(strDistance.substring(dot + 1, dot + 4) + "m");
+                                } else if(distance < 0.001) {
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText(strDistance.substring(dot + 4, dot + 7) + "cm");
+                                }
 
 //                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + distance);
                             }
@@ -127,20 +136,42 @@ public class ConnectedThread extends Thread {
                                 @Override
                                 public void onClick(View v) {
                                     Log.d("TAG:Recalculate", "================================클릭-끝================================");
-                                    for(int i=0;i<listLatitude.size();i++) {
+                                    int size = listLatitude.size();
+
+                                    // 초기화
+                                    calculateLatitude = 0.0;
+                                    calculateLongitude = 0.0;
+
+                                    for(int i = 0; i < size; i++) {
                                         calculateLatitude += listLatitude.get(i);
                                         calculateLongitude += listLongitude.get(i);
                                     }
-                                    calculateLatitude /= listLatitude.size();
-                                    calculateLongitude /= listLongitude.size();
+                                    calculateLatitude /= size;
+                                    calculateLongitude /= size;
 
                                     Log.d("TAG:Recalculate", "latitude : " + calculateLatitude);
                                     Log.d("TAG:Recalculate", "longitude : " + calculateLongitude);
+
+                                    // 위도 경도 표시
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewCoordinate)).setText("위도 : " + calculateLatitude + "\n" + "경도 : " + calculateLongitude);
+
                                     distance = distanceByHaversine(calculateLatitude, calculateLongitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
+                                    Log.d("TAG:Recalculate", "distance : " + distance);
                                     String strDistance = Double.toString(distance);
 
-                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewCoordinate)).setText("위도 : " + calculateLatitude + "\n" + "경도 : " + calculateLongitude);
-                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + strDistance.substring(2, 5) + "." + strDistance.substring(5, 7) + "m");
+                                    // 소수점 탐색
+                                    int dot = strDistance.indexOf(".");
+
+                                    if(distance >= 1) {
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText(strDistance.substring(0, dot) + "." + strDistance.substring(dot+1, dot+3) +"km");
+                                        Log.d("TAG:Recalculate", "textviewAccuracy : " + strDistance.substring(0, dot) + "." + strDistance.substring(dot+1, dot+3) +"km");
+                                    } else if((distance >= 0.001) && (distance < 1)) {
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText(strDistance.substring(dot + 1, dot + 4) + "m");
+                                        Log.d("TAG:Recalculate", "textviewAccuracy : " + strDistance.substring(dot + 1, dot + 4) + "m");
+                                    } else if(distance < 0.001) {
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText(strDistance.substring(dot + 4, dot + 7) + "cm");
+                                        Log.d("TAG:Recalculate", "textviewAccuracy : " + strDistance.substring(dot + 4, dot + 7) + "cm");
+                                    }
                                 }
                             });
 
