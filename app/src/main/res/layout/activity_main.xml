@@ -12,145 +12,251 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:weightSum="10"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="1dp"
             tools:layout_editor_absoluteY="-2dp">
 
             <LinearLayout
+                android:id="@+id/LinearLayout_Upper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/text_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="status"
-                    android:textSize="20dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/btn_paired"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:onClick="onClickButtonPaired"
-                    android:text="Paired Devices"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_status"
-                    tools:ignore="OnClick" />
-
-                <ListView
-                    android:id="@+id/listview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="75dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/btn_paired"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="180dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:weightSum="10">
 
                         <TextView
                             android:id="@+id/textViewGNSS"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="GNSS Status" />
+                            android:layout_height="0dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="3"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="GNSS Status"
+                            android:textSize="25sp" />
 
                         <TextView
                             android:id="@+id/textviewGNSS"
                             android:layout_width="match_parent"
-                            android:layout_height="160dp"
-                            android:layout_weight="1"
+                            android:layout_height="0dp"
+                            android:layout_weight="7"
                             android:autoText="false"
                             android:gravity="center"
                             android:text="NO FIX"
                             android:textAlignment="center"
                             android:textAllCaps="false"
                             android:textSize="50sp" />
+
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="180dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:weightSum="10">
 
                         <TextView
-                            android:id="@+id/Accuracy"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TextView" />
-
-                        <TextView
-                            android:id="@+id/textviewAccuracy"
-                            android:layout_width="match_parent"
-                            android:layout_height="160dp"
-                            android:layout_weight="1"
+                            android:id="@+id/text_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:layout_weight="3"
                             android:gravity="center"
-                            android:textAlignment="center"
-                            android:text="---.--m"
-                            android:textSize="50sp" />
+                            android:text="status"
+                            android:textSize="25sp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"></LinearLayout>
+
+                        <Button
+                            android:id="@+id/btn_paired"
+                            android:layout_width="150dp"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="6"
+                            android:onClick="onClickButtonPaired"
+                            android:text="Paired Devices"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/text_status"
+                            tools:ignore="OnClick" />
                     </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_paired"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/LinearLayout_Middle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <LinearLayout
+                    android:id="@+id/LinearLayout_Middle_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:orientation="vertical"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/textView_Destination"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="3.5"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Destination"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:id="@+id/textView_Destination_LatLng"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="6.5"
+                        android:textSize="28sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/LinearLayout_Middle_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="4"
+                    android:orientation="vertical"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/textView_Coordinate"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="2.5"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Coordinatie"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:id="@+id/textview_Coordinate_LatLng"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="7.5"
+                        android:gravity="left"
+                        android:textSize="30sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/LinearLayout_Middle_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:orientation="vertical"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/textView_Accuracy"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="3.5"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Accuracy"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:id="@+id/textView_Accuracy_m"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:text="---.--m"
+                        android:textAlignment="center"
+                        android:textSize="50sp" />
 
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayout_Lower"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textviewCoordinate"
-                        android:layout_width="match_parent"
-                        android:layout_height="250dp"
-                        android:layout_marginLeft="2dp"
-                        android:gravity="left"
-                        android:textSize="30sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
                     android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/buttonRecalculate"
                         android:layout_width="wrap_content"
                         android:layout_height="130dp"
+                        android:layout_margin="10dp"
                         android:layout_weight="1"
                         android:enabled="false"
                         android:text="다시 계산"
@@ -160,11 +266,13 @@
                         android:id="@+id/buttonMode"
                         android:layout_width="wrap_content"
                         android:layout_height="130dp"
+                        android:layout_margin="10dp"
                         android:layout_weight="1"
                         android:text="일반 모드"
                         android:textSize="30sp" />
                 </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

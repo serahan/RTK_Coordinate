@@ -7,12 +7,9 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -78,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
         buttonRecalculate = (Button) findViewById(R.id.buttonRecalculate);
         buttonMode = (Button) findViewById(R.id.buttonMode);
         listView = (ListView) findViewById(R.id.listview);
-        textviewAccuracy = (TextView) findViewById(R.id.textviewAccuracy);
+        textviewAccuracy = (TextView) findViewById(R.id.textView_Accuracy_m);
         textviewGNSS = (TextView) findViewById(R.id.textviewGNSS);
-        textviewCoordinate = (TextView) findViewById(R.id.textviewCoordinate);
+        textviewCoordinate = (TextView) findViewById(R.id.textview_Coordinate_LatLng);
 
         // Show paired devices
         btArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
@@ -132,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), btArrayAdapter.getItem(position), Toast.LENGTH_SHORT).show();
 
             textStatus.setText("Connecting...");
+            textStatus.setTextColor(Color.DKGRAY);
 
             final String name = btArrayAdapter.getItem(position); // get name
             final String address = deviceAddressArray.get(position); // get address
@@ -145,13 +143,14 @@ public class MainActivity extends AppCompatActivity {
                 btSocket.connect();
             } catch (IOException e) {
                 flag = false;
-                textStatus.setText("connection failed!");
+                textStatus.setText("failed");
+                textStatus.setTextColor(Color.RED);
                 e.printStackTrace();
             }
 
             // start bluetooth communication
             if (flag) {
-                textStatus.setText("CONNECTED TO " + name);
+                textStatus.setText(name);
                 connectedThread = new ConnectedThread(btSocket);
                 connectedThread.start();
                 listView.setVisibility(View.GONE);
