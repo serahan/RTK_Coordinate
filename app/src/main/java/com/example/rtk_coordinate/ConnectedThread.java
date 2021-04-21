@@ -131,7 +131,7 @@ public class ConnectedThread extends Thread {
                                 } else if((distance >= 0.001) && (distance < 1)) {
                                     ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m");
                                 } else if(distance < 0.001) {
-                                    ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 7) + "cm");
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 6) + "cm");
                                 }
 
 //                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + distance);
@@ -174,7 +174,7 @@ public class ConnectedThread extends Thread {
                                         ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m");
                                         Log.d("TAG:Recalculate", "textviewAccuracy : " + strDistance.substring(dot + 1, dot + 4) + "m");
                                     } else if(distance < 0.001) {
-                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 7) + "cm");
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 6) + "cm");
                                         Log.d("TAG:Recalculate", "textviewAccuracy : " + strDistance.substring(dot + 4, dot + 7) + "cm");
                                     }
                                 }
