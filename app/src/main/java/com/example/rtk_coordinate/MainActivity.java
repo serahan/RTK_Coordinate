@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,10 +36,13 @@ public class MainActivity extends AppCompatActivity {
     TextView textviewAccuracy;
     TextView textviewGNSS;
     TextView textviewCoordinate;
+    TextView textviewDestination;
     Button btnParied;
     Button buttonRecalculate;
     Button buttonMode;
     ListView listView;
+    LinearLayout linearLayout_Middle;
+    LinearLayout linearLayout_Lower;
 
     BluetoothAdapter btAdapter;
     Set<BluetoothDevice> pairedDevices;
@@ -78,11 +82,17 @@ public class MainActivity extends AppCompatActivity {
         textviewAccuracy = (TextView) findViewById(R.id.textView_Accuracy_m);
         textviewGNSS = (TextView) findViewById(R.id.textviewGNSS);
         textviewCoordinate = (TextView) findViewById(R.id.textview_Coordinate_LatLng);
+        textviewDestination = (TextView) findViewById(R.id.textView_Destination_LatLng);
+        linearLayout_Middle = (LinearLayout) findViewById(R.id.LinearLayout_Middle);
+        linearLayout_Lower = (LinearLayout) findViewById(R.id.LinearLayout_Lower);
 
         // Show paired devices
         btArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         deviceAddressArray = new ArrayList<>();
         listView.setAdapter(btArrayAdapter);
+
+        // textview Destination
+        textviewDestination.setText("위도 : 35.9427195389\n경도 : 126.68026195");
 
         // 버튼 클릭 리스너
         buttonMode.setOnClickListener(new Button.OnClickListener() {
@@ -106,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickButtonPaired(View view) {
         listView.setVisibility(View.VISIBLE);
+
         btArrayAdapter.clear();
         if (deviceAddressArray != null && !deviceAddressArray.isEmpty()) {
             deviceAddressArray.clear();
@@ -155,7 +166,8 @@ public class MainActivity extends AppCompatActivity {
                 connectedThread = new ConnectedThread(btSocket);
                 connectedThread.start();
                 listView.setVisibility(View.GONE);
-
+                linearLayout_Middle.setVisibility(View.VISIBLE);
+                linearLayout_Lower.setVisibility(View.VISIBLE);
             }
 
         }

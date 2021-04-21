@@ -30,6 +30,8 @@ public class ConnectedThread extends Thread {
     private double distance = 0.0;
     private double calculateLatitude = 0.0;
     private double calculateLongitude = 0.0;
+    private int satellite = 0;
+
     static Context mMain;
     List<Double> listLatitude = new ArrayList<>();
     List<Double> listLongitude = new ArrayList<>();
@@ -110,6 +112,9 @@ public class ConnectedThread extends Thread {
                             listLatitude.add(new Double(latitude));
                             listLongitude.add(new Double(longitude));
 
+                            // 위성 개수
+                            ((TextView) ((Activity) mMain).findViewById(R.id.textView_Satellite_num)).setText(splitData[7]);
+
                             if(((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("고정 모드")) {
                                 // do nothing
                             } else if(((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("일반 모드")) {
@@ -176,6 +181,11 @@ public class ConnectedThread extends Thread {
                             });
 
                         }
+                    }
+                } else {
+                    // 수신된 좌표 데이터가 없을때
+                    if(((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).getText().equals("3D FIX")) {
+                        ((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).setText("NO FIX");
                     }
                 }
             } catch (IOException e) {

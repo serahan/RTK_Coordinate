@@ -27,12 +27,6 @@
             tools:layout_editor_absoluteX="1dp"
             tools:layout_editor_absoluteY="-2dp">
 
-            <ListView
-                android:id="@+id/listview"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:visibility="gone" />
-
             <LinearLayout
                 android:id="@+id/LinearLayout_Upper"
                 android:layout_width="match_parent"
@@ -63,7 +57,7 @@
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:text="GNSS Status"
-                            android:textSize="25sp" />
+                            android:textSize="22sp" />
 
                         <TextView
                             android:id="@+id/textviewGNSS"
@@ -75,6 +69,7 @@
                             android:text="NO FIX"
                             android:textAlignment="center"
                             android:textAllCaps="false"
+                            android:textColor="#000000"
                             android:textSize="50sp" />
 
                     </LinearLayout>
@@ -117,11 +112,19 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/text_status"
+                            android:background="@drawable/button_design"
                             tools:ignore="OnClick" />
                     </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
+
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/LinearLayout_Middle"
@@ -129,45 +132,94 @@
                 android:layout_height="0dp"
                 android:layout_weight="8"
                 android:orientation="vertical"
+                android:visibility="invisible"
                 android:weightSum="10">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal"></LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/LinearLayout_Middle_1"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
-                    android:orientation="vertical"
+                    android:layout_weight="2.8"
+                    android:orientation="horizontal"
                     android:weightSum="10">
 
-                    <TextView
-                        android:id="@+id/textView_Destination"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="3.5"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:text="Destination"
-                        android:textSize="30sp" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:orientation="vertical"
+                        android:weightSum="10">
 
-                    <TextView
-                        android:id="@+id/textView_Destination_LatLng"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_weight="6.5"
-                        android:textSize="28sp" />
+                        <TextView
+                            android:id="@+id/textView_Destination"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="2.8"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Destination"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:id="@+id/textView_Destination_LatLng"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="6.8"
+                            android:background="#E8E8E8"
+                            android:padding="10dp"
+                            android:textSize="25sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:orientation="vertical"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:id="@+id/textView_Satellite"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="2.8"
+                            android:text="Satellite"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:id="@+id/textView_Satellite_num"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="6.8"
+                            android:background="#E8E8E8"
+                            android:gravity="center"
+                            android:textColor="#000000"
+                            android:textSize="48sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/LinearLayout_Middle_2"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="3.5"
+                    android:layout_weight="3.3"
                     android:orientation="vertical"
                     android:weightSum="10">
 
@@ -178,11 +230,11 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_weight="3"
+                        android:layout_weight="2.5"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="Coordinatie"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
 
                     <TextView
                         android:id="@+id/textview_Coordinate_LatLng"
@@ -191,8 +243,11 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_weight="7"
+                        android:layout_weight="7.3"
+                        android:background="#FFEBDB"
                         android:gravity="left"
+                        android:padding="10dp"
+                        android:textColor="#000000"
                         android:textSize="30sp" />
                 </LinearLayout>
 
@@ -200,7 +255,7 @@
                     android:id="@+id/LinearLayout_Middle_3"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="3.5"
+                    android:layout_weight="3.3"
                     android:orientation="vertical"
                     android:weightSum="10">
 
@@ -211,11 +266,11 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_weight="3"
+                        android:layout_weight="2.5"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="Accuracy"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
 
                     <TextView
                         android:id="@+id/textView_Accuracy_m"
@@ -224,10 +279,12 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_weight="6"
+                        android:layout_weight="7"
+                        android:background="#E3F5FF"
                         android:gravity="center"
                         android:text="---.--m"
                         android:textAlignment="center"
+                        android:textColor="#000000"
                         android:textSize="50sp" />
 
                 </LinearLayout>
@@ -240,7 +297,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="invisible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -256,6 +313,7 @@
                         android:layout_weight="1"
                         android:enabled="false"
                         android:text="다시 계산"
+                        android:background="@drawable/button_design"
                         android:textSize="30sp" />
 
                     <Button
@@ -265,6 +323,7 @@
                         android:layout_margin="10dp"
                         android:layout_weight="1"
                         android:text="일반 모드"
+                        android:background="@drawable/button_design"
                         android:textSize="30sp" />
                 </LinearLayout>
             </LinearLayout>
