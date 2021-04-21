@@ -10,6 +10,7 @@
         android:id="@+id/scrollView3"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -21,10 +22,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:weightSum="10"
+            android:weightSum="12"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="1dp"
             tools:layout_editor_absoluteY="-2dp">
+
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/LinearLayout_Upper"
@@ -51,10 +58,7 @@
                             android:id="@+id/textViewGNSS"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_margin="10dp"
                             android:layout_weight="3"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
@@ -119,21 +123,11 @@
 
             </LinearLayout>
 
-            <ListView
-                android:id="@+id/listview"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_paired"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <LinearLayout
                 android:id="@+id/LinearLayout_Middle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="6"
+                android:layout_weight="8"
                 android:orientation="vertical"
                 android:weightSum="10">
 
@@ -173,7 +167,7 @@
                     android:id="@+id/LinearLayout_Middle_2"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="3.5"
                     android:orientation="vertical"
                     android:weightSum="10">
 
@@ -184,7 +178,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_weight="2.5"
+                        android:layout_weight="3"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="Coordinatie"
@@ -197,7 +191,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_weight="7.5"
+                        android:layout_weight="7"
                         android:gravity="left"
                         android:textSize="30sp" />
                 </LinearLayout>
@@ -206,7 +200,7 @@
                     android:id="@+id/LinearLayout_Middle_3"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="3.5"
                     android:orientation="vertical"
                     android:weightSum="10">
 
@@ -217,7 +211,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_weight="3.5"
+                        android:layout_weight="3"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="Accuracy"
@@ -245,17 +239,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
                     <Button
                         android:id="@+id/buttonRecalculate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="130dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
                         android:enabled="false"
@@ -264,8 +260,8 @@
 
                     <Button
                         android:id="@+id/buttonMode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="130dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
                         android:text="일반 모드"
@@ -275,4 +271,5 @@
 
         </LinearLayout>
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

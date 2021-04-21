@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickButtonPaired(View view) {
+        listView.setVisibility(View.VISIBLE);
         btArrayAdapter.clear();
         if (deviceAddressArray != null && !deviceAddressArray.isEmpty()) {
             deviceAddressArray.clear();
