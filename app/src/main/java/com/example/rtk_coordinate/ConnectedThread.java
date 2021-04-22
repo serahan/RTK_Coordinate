@@ -127,11 +127,14 @@ public class ConnectedThread extends Thread {
                                 int dot = strDistance.indexOf(".");
 
                                 if(distance >= 1) {
-                                    ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(0, dot) + "." + strDistance.substring(dot+1, dot+3) +"km");
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(0, dot) + "km  " + strDistance.substring(dot+1, dot+4) +"m");
+                                    Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(0, dot) + "km  " + strDistance.substring(dot+1, dot+4) +"m");
                                 } else if((distance >= 0.001) && (distance < 1)) {
-                                    ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m");
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm" );
+                                    Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm");
                                 } else if(distance < 0.001) {
                                     ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 6) + "cm");
+                                    Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(dot + 4, dot + 6) + "cm");
                                 }
 
 //                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + distance);
@@ -168,14 +171,14 @@ public class ConnectedThread extends Thread {
                                     int dot = strDistance.indexOf(".");
 
                                     if(distance >= 1) {
-                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(0, dot) + "." + strDistance.substring(dot+1, dot+3) +"km");
-                                        Log.d("TAG:Recalculate", "textviewAccuracy : " + strDistance.substring(0, dot) + "." + strDistance.substring(dot+1, dot+3) +"km");
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 3) +"m");
+                                        Log.d("TAG:textviewAccuracy2", "textviewAccuracy : " + strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 3) +"m");
                                     } else if((distance >= 0.001) && (distance < 1)) {
-                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m");
-                                        Log.d("TAG:Recalculate", "textviewAccuracy : " + strDistance.substring(dot + 1, dot + 4) + "m");
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm" );
+                                        Log.d("TAG:textviewAccuracy2", "textviewAccuracy : " + strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm");
                                     } else if(distance < 0.001) {
                                         ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 6) + "cm");
-                                        Log.d("TAG:Recalculate", "textviewAccuracy : " + strDistance.substring(dot + 4, dot + 7) + "cm");
+                                        Log.d("TAG:textviewAccuracy2", "textviewAccuracy : " + strDistance.substring(dot + 4, dot + 6) + "cm");
                                     }
                                 }
                             });
@@ -213,21 +216,39 @@ public class ConnectedThread extends Thread {
         }
     }
 
+    // 1번
+//    public static double distanceByHaversine(double lat1, double longi1, double lat2, double longi2) {
+//        // 공식에서는 지구가 완전한 구형이라고 가정
+//        // 실제 지구는 적도 쪽이 좀 더 길쭉한 타원형이라 완벽히 정확하다 할 수 없음
+//        double distance;
+//        double radius = 6371;   // 지구 반지름(km)
+//        double toRadian = Math.PI / 180;
+//
+//        double deltaLatitude = Math.abs(lat1 - lat2) * toRadian;
+//        double deltaLongitude = Math.abs(longi1 - longi2) * toRadian;
+//
+//        double sinDeltaLat = Math.sin(deltaLatitude / 2);
+//        double sinDeltaLng = Math.sin(deltaLongitude / 2);
+//        double squareRoot = Math.sqrt(sinDeltaLat * sinDeltaLat + Math.cos(lat1 * toRadian) * Math.cos(lat2 * toRadian) * sinDeltaLng * sinDeltaLng);
+//
+//        distance = 2 * radius * Math.asin(squareRoot);
+//
+//        Log.d("TAG:distance", "distance : " + distance);
+//
+//        return distance;
+//    }
+
+    // 2번
     public static double distanceByHaversine(double lat1, double longi1, double lat2, double longi2) {
-        // 공식에서는 지구가 완전한 구형이라고 가정
-        // 실제 지구는 적도 쪽이 좀 더 길쭉한 타원형이라 완벽히 정확하다 할 수 없음
-        double distance;
-        double radius = 6371;   // 지구 반지름(km)
-        double toRadian = Math.PI / 180;
+        double deg2radMultiplier = Math.PI / 180;
+        lat1 = lat1 * deg2radMultiplier;
+        longi1 = longi1 * deg2radMultiplier;
+        lat2 = lat2 * deg2radMultiplier;
+        longi2 = longi2 * deg2radMultiplier;
 
-        double deltaLatitude = Math.abs(lat1 - lat2) * toRadian;
-        double deltaLongitude = Math.abs(longi1 - longi2) * toRadian;
-
-        double sinDeltaLat = Math.sin(deltaLatitude / 2);
-        double sinDeltaLng = Math.sin(deltaLongitude / 2);
-        double squareRoot = Math.sqrt(sinDeltaLat * sinDeltaLat + Math.cos(lat1 * toRadian) * Math.cos(lat2 * toRadian) * sinDeltaLng * sinDeltaLng);
-
-        distance = 2 * radius * Math.asin(squareRoot);
+        double radius = 6378.137;
+        double dlng = longi2 - longi1;
+        double distance = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(dlng)) * radius;
 
         Log.d("TAG:distance", "distance : " + distance);
 
