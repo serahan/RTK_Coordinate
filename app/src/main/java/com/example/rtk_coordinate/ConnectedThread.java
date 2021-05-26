@@ -30,7 +30,6 @@ public class ConnectedThread extends Thread {
     private double distance = 0.0;
     private double calculateLatitude = 0.0;
     private double calculateLongitude = 0.0;
-    private int satellite = 0;
 
     static Context mMain;
     List<Double> listLatitude = new ArrayList<>();
@@ -80,13 +79,10 @@ public class ConnectedThread extends Thread {
                     isReader = new InputStreamReader(mmInStream);
                     reader = new BufferedReader(isReader);
 
-                    while((str = reader.readLine())!=null) {
+                    while ((str = reader.readLine()) != null) {
 //                        Log.d("TAG:readStream", "readStream : " + str + "\n");
                         if (str.contains("GPGGA") || str.contains("GNGGA")) { // GPGGA, GNGGA를 포함하고 있는 경우
                             Log.d("TAG:readStream", "readStream : " + str + "\n");
-                            if(((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).getText().equals("NO FIX")) {
-                                ((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).setText("3D FIX");
-                            }
 
                             splitData = str.split(",");
 
@@ -94,50 +90,58 @@ public class ConnectedThread extends Thread {
 //                                Log.d("TAG:split", "split[" + i + "] " + splitData[i]);
 //                            }
 
-                            // 위도 계산
-                            up = Double.parseDouble(splitData[2].substring(0, 2));              // 35.00 double
-                            down = Double.parseDouble(splitData[2].substring(2));               // 56.67005 double
-                            down /= 60;
-                            latitude = up + down;
 
-                            // 경도 계산
-                            up = Double.parseDouble(splitData[4].substring(0,3));
-                            down = Double.parseDouble(splitData[4].substring(3));
-                            down /= 60;
-                            longitude = up + down;
+                            if ((splitData[2].equals(null)) && (splitData[4].equals(null))) {
+                                // 위도 계산
+                                up = Double.parseDouble(splitData[2].substring(0, 2));              // 35.00 double
+                                down = Double.parseDouble(splitData[2].substring(2));               // 56.67005 double
+                                down /= 60;
+                                latitude = up + down;
 
-                            Log.d("TAG:test", "latitude : " + latitude);
-                            Log.d("TAG:test", "longitude : " + longitude);
+                                // 경도 계산
+                                up = Double.parseDouble(splitData[4].substring(0, 3));
+                                down = Double.parseDouble(splitData[4].substring(3));
+                                down /= 60;
+                                longitude = up + down;
 
-                            listLatitude.add(new Double(latitude));
-                            listLongitude.add(new Double(longitude));
+                                Log.d("TAG:test", "latitude : " + latitude);
+                                Log.d("TAG:test", "longitude : " + longitude);
 
-                            // 위성 개수
-                            ((TextView) ((Activity) mMain).findViewById(R.id.textView_Satellite_num)).setText(splitData[7]);
+                                listLatitude.add(new Double(latitude));
+                                listLongitude.add(new Double(longitude));
 
-                            if(((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("고정 모드")) {
-                                // do nothing
-                            } else if(((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("일반 모드")) {
-                                ((TextView) ((Activity) mMain).findViewById(R.id.textview_Coordinate_LatLng)).setText("위도 : " + latitude + "\n" + "경도 : " + longitude);
-                                distance = distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
-
-                                String strDistance = Double.toString(distance);
-
-                                // 소수점 탐색
-                                int dot = strDistance.indexOf(".");
-
-                                if(distance >= 1) {
-                                    ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(0, dot) + "km  " + strDistance.substring(dot+1, dot+4) +"m");
-                                    Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(0, dot) + "km  " + strDistance.substring(dot+1, dot+4) +"m");
-                                } else if((distance >= 0.001) && (distance < 1)) {
-                                    ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm" );
-                                    Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm");
-                                } else if(distance < 0.001) {
-                                    ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 6) + "cm");
-                                    Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(dot + 4, dot + 6) + "cm");
+                                if (((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).getText().equals("NO FIX")) {
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).setText("3D FIX");
                                 }
 
+
+                                // 위성 개수
+                                ((TextView) ((Activity) mMain).findViewById(R.id.textView_Satellite_num)).setText(splitData[7]);
+
+                                if (((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("고정 모드")) {
+                                    // do nothing
+                                } else if (((TextView) ((Activity) mMain).findViewById(R.id.buttonMode)).getText().equals("일반 모드")) {
+                                    ((TextView) ((Activity) mMain).findViewById(R.id.textview_Coordinate_LatLng)).setText("위도 : " + latitude + "\n" + "경도 : " + longitude);
+                                    distance = distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
+
+                                    String strDistance = Double.toString(distance);
+
+                                    // 소수점 탐색
+                                    int dot = strDistance.indexOf(".");
+
+                                    if (distance >= 1) {
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 4) + "m");
+                                        Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 4) + "m");
+                                    } else if ((distance >= 0.001) && (distance < 1)) {
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm");
+                                        Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm");
+                                    } else if (distance < 0.001) {
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 6) + "cm");
+                                        Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(dot + 4, dot + 6) + "cm");
+                                    }
+
 //                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + distance);
+                                }
                             }
 
                             ((TextView) ((Activity) mMain).findViewById(R.id.buttonRecalculate)).setOnClickListener(new Button.OnClickListener() {
@@ -150,7 +154,7 @@ public class ConnectedThread extends Thread {
                                     calculateLatitude = 0.0;
                                     calculateLongitude = 0.0;
 
-                                    for(int i = 0; i < size; i++) {
+                                    for (int i = 0; i < size; i++) {
                                         calculateLatitude += listLatitude.get(i);
                                         calculateLongitude += listLongitude.get(i);
                                     }
@@ -170,13 +174,13 @@ public class ConnectedThread extends Thread {
                                     // 소수점 탐색
                                     int dot = strDistance.indexOf(".");
 
-                                    if(distance >= 1) {
-                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 3) +"m");
-                                        Log.d("TAG:textviewAccuracy2", "textviewAccuracy : " + strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 3) +"m");
-                                    } else if((distance >= 0.001) && (distance < 1)) {
-                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm" );
+                                    if (distance >= 1) {
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 3) + "m");
+                                        Log.d("TAG:textviewAccuracy2", "textviewAccuracy : " + strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 3) + "m");
+                                    } else if ((distance >= 0.001) && (distance < 1)) {
+                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm");
                                         Log.d("TAG:textviewAccuracy2", "textviewAccuracy : " + strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm");
-                                    } else if(distance < 0.001) {
+                                    } else if (distance < 0.001) {
                                         ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 6) + "cm");
                                         Log.d("TAG:textviewAccuracy2", "textviewAccuracy : " + strDistance.substring(dot + 4, dot + 6) + "cm");
                                     }
@@ -187,7 +191,7 @@ public class ConnectedThread extends Thread {
                     }
                 } else {
                     // 수신된 좌표 데이터가 없을때
-                    if(((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).getText().equals("3D FIX")) {
+                    if (((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).getText().equals("3D FIX")) {
                         ((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).setText("NO FIX");
                     }
                 }
