@@ -91,7 +91,7 @@ public class ConnectedThread extends Thread {
 //                            }
 
 
-                            if ((!splitData[2].equals(null)) && (!splitData[4].equals(null))) {
+                            if ((!splitData[2].equals("")) && (!splitData[4].equals(""))) {
                                 // 위도 계산
                                 up = Double.parseDouble(splitData[2].substring(0, 2));              // 35.00 double
                                 down = Double.parseDouble(splitData[2].substring(2));               // 56.67005 double
