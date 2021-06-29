@@ -108,25 +108,17 @@ public class ConnectedThread extends Thread {
                                 str = StrToHex + str;
                             }
 
-                            // TODO : GNGGA로 나누고 진행할 것 / UBX에 , 가 들어왔을 경우 망함
                             strUBX = str.split("GNGGA,");
-                            // strUBX[0] 에는 UBX가, strUBX[1]에는 GNGGA 이후 내용이 들어가 있음
-                            // strUBX[1]에 $GNGGA 추가해줌
-                            strUBX[1] = "$GNGGA," + strUBX[1];
-                            strUBX[0] = strUBX[0].substring(0, strUBX[0].length() - 1);
 
-                            splitData = str.split(",");
+                            // strUBX[0] 에는 UBX가, strUBX[1]에는 GNGGA 이후 내용이 들어가 있음
+                            strUBX[0] = strUBX[0].substring(0, strUBX[0].length() - 1);
+                            strUBX[1] = "$GNGGA," + strUBX[1];
+
+                            splitData = strUBX[1].split(",");
 
 //                            for(int i=0; i<splitData.length;i++) {
 //                                Log.d("TAG:split", "split[" + i + "] " + splitData[i]);
 //                            }
-
-                            // UBX 파싱 ====================================================================================================================
-                            String UBX = "";
-                            UBX = splitData[0].replace("$GNGGA","");
-                            Log.d("TAG:readStream", "UBX : " + UBX + "\n");
-                            // todo
-
 
                             if ((!splitData[2].equals("")) && (!splitData[4].equals(""))) {
                                 // 위도 계산
