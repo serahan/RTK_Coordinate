@@ -8,6 +8,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +17,9 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.io.UnsupportedEncodingException;
+
 
 public class ConnectedThread extends Thread {
     private final BluetoothSocket mmSocket;
@@ -75,6 +79,7 @@ public class ConnectedThread extends Thread {
         String[] strUBX;
         String[] splitData;
         String StrToHex = "";
+        String result = "";
         double up;
         double down;
 
@@ -104,15 +109,34 @@ public class ConnectedThread extends Thread {
                         if (str.contains("GPGGA") || str.contains("GNGGA")) { // GPGGA, GNGGA를 포함하고 있는 경우
                             Log.d("TAG:readStream", "readStream : " + str + "\n");
 
-                            if(!StrToHex.equals(null)) { // TODO : "" 이 null로 들어가는지 확인
+                            if(!StrToHex.equals("")) { // TODO : "" 이 null로 들어가는지 확인
                                 str = StrToHex + str;
                             }
 
                             strUBX = str.split("GNGGA,");
 
                             // strUBX[0] 에는 UBX가, strUBX[1]에는 GNGGA 이후 내용이 들어가 있음
-                            strUBX[0] = strUBX[0].substring(0, strUBX[0].length() - 1);
-                            strUBX[1] = "$GNGGA," + strUBX[1];
+                            strUBX[0] = strUBX[0].substring(0, strUBX[0].length() - 1);         // $ 제거
+                            strUBX[1] = "$GNGGA," + strUBX[1];                                  // $GNGGA 추가
+
+                            // UBX 파싱 부분 ##########################################################################################################
+                            // strUBX[0]
+
+                            // String to Byte
+                            byte[] bytesUBX = strUBX[0].getBytes();
+//                            String hexText = new java.math.BigInteger(bytesUBX).toString(16);
+                            //result = byteToHexString(bytesUBX);
+                            result = byteToHexString(bytesUBX);
+//                            result = stringToHex(strUBX[0]);
+                            Log.d("TAG:readStream", "result : " + result);
+
+
+
+
+
+
+                            // GNGGA 파싱 부분 ########################################################################################################
+                            // strUBX[1]
 
                             splitData = strUBX[1].split(",");
 
@@ -314,6 +338,26 @@ public class ConnectedThread extends Thread {
         Log.d("TAG:distance", "distance : " + distance);
 
         return distance;
+    }
+
+    // byte 배열을 16진수 String으로 변환
+    public static String byteToHexString(byte[] byteArray) {
+        StringBuffer sb = new StringBuffer(byteArray.length * 2);
+        for(byte b : byteArray) {
+            sb.append(String.format("%04x", b).toUpperCase());
+        }
+        return sb.toString();
+    }
+
+    // 다른 사람 코드
+    static String stringToHex(String string) {
+        StringBuilder buf = new StringBuilder(200);
+        for (char ch: string.toCharArray()) {
+            if (buf.length() > 0)
+                buf.append(' ');
+            buf.append(String.format("%04x", (int) ch));
+        }
+        return buf.toString();
     }
 }
 
