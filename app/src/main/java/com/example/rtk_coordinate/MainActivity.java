@@ -32,17 +32,16 @@ public class MainActivity extends AppCompatActivity {
     String TAG = "MainActivity";
     UUID BT_MODULE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // "random" unique identifier
 
-    TextView textStatus;
-    TextView textviewAccuracy;
-    TextView textviewGNSS;
-    TextView textviewCoordinate;
-    TextView textviewDestination;
-    Button btnParied;
-    Button buttonRecalculate;
-    Button buttonMode;
+    TextView textViewState;
+    TextView textViewAccuracy;
+    TextView textViewCoordinate;
+    TextView textViewRTKState;
+    TextView textViewSatellite;
+    Button btnConnect;
+    Button btnStop;
     ListView listView;
-    LinearLayout linearLayout_Middle;
-    LinearLayout linearLayout_Lower;
+    LinearLayout linearLayoutMiddle;
+    LinearLayout linearLayoutLower;
 
     BluetoothAdapter btAdapter;
     Set<BluetoothDevice> pairedDevices;
@@ -74,39 +73,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // variables
-        textStatus = (TextView) findViewById(R.id.text_status);
-        btnParied = (Button) findViewById(R.id.btn_paired);
-        buttonRecalculate = (Button) findViewById(R.id.buttonRecalculate);
-        buttonMode = (Button) findViewById(R.id.buttonMode);
-        listView = (ListView) findViewById(R.id.listview);
-        textviewAccuracy = (TextView) findViewById(R.id.textView_Accuracy_m);
-        textviewGNSS = (TextView) findViewById(R.id.textviewGNSS);
-        textviewCoordinate = (TextView) findViewById(R.id.textview_Coordinate_LatLng);
-        textviewDestination = (TextView) findViewById(R.id.textView_Destination_LatLng);
-        linearLayout_Middle = (LinearLayout) findViewById(R.id.LinearLayout_Middle);
-        linearLayout_Lower = (LinearLayout) findViewById(R.id.LinearLayout_Lower);
+        textViewState = (TextView) findViewById(R.id.textViewState);
+        btnConnect = (Button) findViewById(R.id.btnConnect);
+        btnStop = (Button) findViewById(R.id.btnStop);
+        listView = (ListView) findViewById(R.id.listView);
+        textViewAccuracy = (TextView) findViewById(R.id.textViewAccuracy);
+        textViewCoordinate = (TextView) findViewById(R.id.textViewCoordinate);
+        textViewRTKState = (TextView) findViewById(R.id.textViewRTKState);
+        textViewSatellite = (TextView) findViewById(R.id.textViewSatellite);
+        linearLayoutMiddle = (LinearLayout) findViewById(R.id.LinearLayoutMiddle);
+        linearLayoutLower = (LinearLayout) findViewById(R.id.LinearLayoutLower);
 
         // Show paired devices
         btArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         deviceAddressArray = new ArrayList<>();
         listView.setAdapter(btArrayAdapter);
 
-        // textview Destination
-        textviewDestination.setText("위도 : 35.9427195389\n경도 : 126.68026195");
-
-        // 버튼 클릭 리스너
-        buttonMode.setOnClickListener(new Button.OnClickListener() {
+        btnStop.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(buttonMode.getText().equals("고정 모드")) {
-                    buttonMode.setText("일반 모드");
-                    buttonRecalculate.setEnabled(false);
-                    Log.d("TAG:Recalculate", "=======================================================================");
-                } else if(buttonMode.getText().equals("일반 모드")) {
-                    buttonMode.setText("고정 모드");
-                    buttonRecalculate.setEnabled(true);
-                    Log.d("TAG:Recalculate", "================================클릭-시작================================");
-                }
+                // TODO
             }
         });
 
@@ -140,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Toast.makeText(getApplicationContext(), btArrayAdapter.getItem(position), Toast.LENGTH_SHORT).show();
 
-            textStatus.setText("Connecting...");
-            textStatus.setTextColor(Color.DKGRAY);
+            textViewState.setText("Connecting...");
+            textViewState.setTextColor(Color.DKGRAY);
 
             final String name = btArrayAdapter.getItem(position); // get name
             final String address = deviceAddressArray.get(position); // get address
@@ -155,19 +141,19 @@ public class MainActivity extends AppCompatActivity {
                 btSocket.connect();
             } catch (IOException e) {
                 flag = false;
-                textStatus.setText("failed");
-                textStatus.setTextColor(Color.RED);
+                textViewState.setText("failed");
+                textViewState.setTextColor(Color.RED);
                 e.printStackTrace();
             }
 
             // start bluetooth communication
             if (flag) {
-                textStatus.setText(name);
+                textViewState.setText(name);
                 connectedThread = new ConnectedThread(btSocket);
                 connectedThread.start();
                 listView.setVisibility(View.GONE);
-                linearLayout_Middle.setVisibility(View.VISIBLE);
-                linearLayout_Lower.setVisibility(View.VISIBLE);
+                linearLayoutMiddle.setVisibility(View.VISIBLE);
+                linearLayoutLower.setVisibility(View.VISIBLE);
             }
 
         }

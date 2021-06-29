@@ -28,7 +28,7 @@
             tools:layout_editor_absoluteY="-2dp">
 
             <LinearLayout
-                android:id="@+id/LinearLayout_Upper"
+                android:id="@+id/LinearLayoutUpper"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
@@ -46,33 +46,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:weightSum="10">
-
-                        <TextView
-                            android:id="@+id/textViewGNSS"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_margin="10dp"
-                            android:layout_weight="3"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:text="GNSS Status"
-                            android:textSize="22sp" />
-
-                        <TextView
-                            android:id="@+id/textviewGNSS"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="7"
-                            android:autoText="false"
-                            android:gravity="center"
-                            android:text="NO FIX"
-                            android:textAlignment="center"
-                            android:textAllCaps="false"
-                            android:textColor="#000000"
-                            android:textSize="50sp" />
-
-                    </LinearLayout>
+                        android:weightSum="10"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -82,7 +56,7 @@
                         android:weightSum="10">
 
                         <TextView
-                            android:id="@+id/text_status"
+                            android:id="@+id/textViewState"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
@@ -102,7 +76,7 @@
                             android:orientation="horizontal"></LinearLayout>
 
                         <Button
-                            android:id="@+id/btn_paired"
+                            android:id="@+id/btnConnect"
                             android:layout_width="150dp"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
@@ -111,7 +85,7 @@
                             android:text="Paired Devices"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/text_status"
+                            app:layout_constraintTop_toBottomOf="@id/textViewState"
                             android:background="@drawable/button_design"
                             tools:ignore="OnClick" />
                     </LinearLayout>
@@ -120,14 +94,14 @@
             </LinearLayout>
 
             <ListView
-                android:id="@+id/listview"
+                android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
                 android:visibility="gone" />
 
             <LinearLayout
-                android:id="@+id/LinearLayout_Middle"
+                android:id="@+id/LinearLayoutMiddle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="8"
@@ -142,7 +116,7 @@
                     android:orientation="horizontal"></LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/LinearLayout_Middle_1"
+                    android:id="@+id/LinearLayoutMiddle1"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2.8"
@@ -157,7 +131,7 @@
                         android:weightSum="10">
 
                         <TextView
-                            android:id="@+id/textView_Destination"
+                            android:id="@+id/textViewRTKStateTitle"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_marginLeft="10dp"
@@ -166,11 +140,11 @@
                             android:layout_weight="2.8"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:text="Destination"
+                            android:text="RTK State"
                             android:textSize="24sp" />
 
                         <TextView
-                            android:id="@+id/textView_Destination_LatLng"
+                            android:id="@+id/textViewRTKState"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_marginLeft="10dp"
@@ -179,7 +153,7 @@
                             android:layout_weight="6.8"
                             android:background="#E8E8E8"
                             android:padding="10dp"
-                            android:textSize="25sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -190,33 +164,34 @@
                         android:weightSum="10">
 
                         <TextView
-                            android:id="@+id/textView_Satellite"
+                            android:id="@+id/textViewSatelliteTitle"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="10dp"
-                            android:layout_weight="2.8"
+                            android:layout_weight="2.5"
                             android:text="Satellite"
                             android:textSize="24sp" />
 
                         <TextView
-                            android:id="@+id/textView_Satellite_num"
+                            android:id="@+id/textViewSatellite"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginBottom="10dp"
-                            android:layout_weight="6.8"
+                            android:layout_weight="7"
                             android:background="#E8E8E8"
                             android:gravity="center"
                             android:textColor="#000000"
                             android:textSize="48sp" />
+
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/LinearLayout_Middle_2"
+                    android:id="@+id/LinearLayoutMiddle2"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="3.3"
@@ -224,7 +199,7 @@
                     android:weightSum="10">
 
                     <TextView
-                        android:id="@+id/textView_Coordinate"
+                        android:id="@+id/textViewCoordinateTitle"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginLeft="10dp"
@@ -237,7 +212,7 @@
                         android:textSize="24sp" />
 
                     <TextView
-                        android:id="@+id/textview_Coordinate_LatLng"
+                        android:id="@+id/textViewCoordinate"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginLeft="10dp"
@@ -248,51 +223,58 @@
                         android:gravity="left"
                         android:padding="10dp"
                         android:textColor="#000000"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/LinearLayout_Middle_3"
+                    android:id="@+id/LinearLayoutMiddle3"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="3.3"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:weightSum="10">
 
-                    <TextView
-                        android:id="@+id/textView_Accuracy"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="2.5"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:text="Accuracy"
-                        android:textSize="24sp" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textView_Accuracy_m"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_weight="7"
-                        android:background="#E3F5FF"
-                        android:gravity="center"
-                        android:text="---.--m"
-                        android:textAlignment="center"
-                        android:textColor="#000000"
-                        android:textSize="50sp" />
+                        <TextView
+                            android:id="@+id/textViewAccuracyTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="2.5"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Accuracy"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:id="@+id/textViewAccuracy"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="7"
+                            android:background="#E3F5FF"
+                            android:gravity="center"
+                            android:text="---.--m"
+                            android:textAlignment="center"
+                            android:textColor="#000000"
+                            android:textSize="50sp" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/LinearLayout_Lower"
+                android:id="@+id/LinearLayoutLower"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
@@ -305,25 +287,20 @@
                     android:orientation="horizontal"
                     android:weightSum="2">
 
-                    <Button
-                        android:id="@+id/buttonRecalculate"
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:enabled="false"
-                        android:text="다시 계산"
-                        android:background="@drawable/button_design"
-                        android:textSize="30sp" />
+                        android:orientation="horizontal"></LinearLayout>
 
                     <Button
-                        android:id="@+id/buttonMode"
+                        android:id="@+id/btnStop"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:text="일반 모드"
                         android:background="@drawable/button_design"
+                        android:text="일시정지"
                         android:textSize="30sp" />
                 </LinearLayout>
             </LinearLayout>
