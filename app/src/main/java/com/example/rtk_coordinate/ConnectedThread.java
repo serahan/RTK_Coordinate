@@ -89,6 +89,7 @@ public class ConnectedThread extends Thread {
         String str;
         String strHex = "";
         String[] strUBX;
+        String[] splitResult;
         String[] splitData;
         String StrToHex = "";
         String result = "";
@@ -118,7 +119,7 @@ public class ConnectedThread extends Thread {
                     // byte로 읽는 걸 mmInStream.read(buffer, 0, bytes)로 변경하여 성공했다고 생각하고 Hex 변환 진행
 
 //                    result = byteToHexString(buffer, bytes);
-                    result = "B56201131C0000000000F43D6C1689AF97ED7B08B61843333116F0F2200062E70000F8A624474E4747412C3038323933342E35302C333535362E36373031302C4E2C31323634302E39363338322C452C312C31322C302E37302C32312E312C4D2C31382E382C4D2C2C2A37360D0A";
+                    result = "B56201131C0000000000F43D6C1689AF97ED7B08B61843333116F0F2200062E70000F8A624474E4747412C3038323933342E35302C333535362E36373031302C4E2C31323634302E39363338322C452C312C31322C302E37302C32312E312C4D2C31382E382C4D2C2C2A37360D0AB5";
                     Log.d("TAG:readStream", "result.length : " + result.length());
 
                     // 전체 들어오는 대로 이어붙이기
@@ -145,7 +146,17 @@ public class ConnectedThread extends Thread {
                             B562.add(B562.get(B562.size()-1).substring(220,222));
                             B562.set(B562.size()-2, B562.get(B562.size()-2).substring(0,220));
                         }
-                        for(int i = B562.size() - 1; i > 0; i++) {
+                        // 마지막 arraylist 값이 전부 들어오지 않은 경우
+                        if(B562.get(B562.size()-1).length() < 220) {
+                            strBytes = B562.get(B562.size()-1);
+                        } else if(B562.get(B562.size()-1).length() == 220) {
+                            // 마지막 ArrayList B562 까지 110Byte가 전부 들어온 경우
+                            strBytes = "";
+                        }
+
+                        // 가장 최근에 들어온 부분부터 접근
+                        // 만약 110 byte가 전부 들어왔으면 그걸 사용
+                        for(int i = B562.size() - 1; i > 0; i--) {
                             if(B562.get(i).length() == 220) {
                                 strHex = B562.get(i);
                                 break;
@@ -153,29 +164,115 @@ public class ConnectedThread extends Thread {
                         }
                         Log.d("TAG:readStream", "strHex : " + strHex);
 
+                        // ArrayList B562 clear
+                        B562.clear();
+
                         // GNGGA 파싱 및 분리
                         // UBX는 파싱 그대로 진행
 
-                        splitData = strHex.split("24474E474741");
-                        splitData[1] = "24474E474741" + splitData[1];
+                        if(!strHex.equals("")) {
+                            splitResult = strHex.split("24474E474741");
+                            splitResult[1] = "24474E474741" + splitResult[1];
 
-                        Log.d("TAG:readStream", "splitData[0].length : " + splitData[0].length());
-                        Log.d("TAG:readStream", "splitData[1].length : " + splitData[1].length());
-                        // splitData[0] 에는 UBX hex, splitData[1] 에는 GNGGA hex 상태.
+                            Log.d("TAG:readStream", "splitData[0].length : " + splitResult[0].length());
+                            Log.d("TAG:readStream", "splitData[1].length : " + splitResult[1].length());
+                            // splitResult[0] 에는 UBX hex, splitResult[1] 에는 GNGGA hex 상태.
 
-                        splitData[1] = hexToAscii(splitData[1]);
-                        Log.d("TAG:readStream", "strHex : " + strHex);
-                        Log.d("TAG:readStream", "str : " + splitData[1]);
+                            // splitResult[1] 를 ASCII로 변경
+                            splitResult[1] = hexToAscii(splitResult[1]);
+                            Log.d("TAG:readStream", "strHex : " + strHex);
+                            Log.d("TAG:readStream", "str : " + splitResult[1]);
 
-                        String accuracy = splitData[0].substring(60, 68);
-                        Log.d("TAG:readStream", "accuarcy : " + accuracy);
+                            String accuracy = splitResult[0].substring(60, 68);
+                            Log.d("TAG:readStream", "accuarcy : " + accuracy);
 
-                        int test = toLittleEndian(accuracy);
-                        double test_double = test * 0.0001;
-                        Accuracy = Double.toString(test_double);
+                            int test = toLittleEndian(accuracy);
+                            double test_double = test * 0.0001;
+                            Accuracy = Double.toString(test_double);
 
-                        Log.d("TAG:readStream", "test : " + test_double);
-                        Log.d("TAG:readStream", "test : " + Accuracy);
+                            Log.d("TAG:readStream", "test : " + test_double);
+                            Log.d("TAG:readStream", "test : " + Accuracy);
+
+                            // [STATE] splitResult[0] : UBX hex, splitResult[1] : GNGGA ASCII
+
+                            // GNGGA 파싱 부분 ########################################################################################################
+                            // strUBX[1]
+
+                            splitData = splitResult[1].split(",");
+
+//                            for(int i=0; i<splitData.length;i++) {
+//                                Log.d("TAG:split", "split[" + i + "] " + splitData[i]);
+//                            }
+
+                            if ((!splitData[2].equals("")) && (!splitData[4].equals(""))) {
+                                // 위도 계산
+                                up = Double.parseDouble(splitData[2].substring(0, 2));              // 35.00 double
+                                down = Double.parseDouble(splitData[2].substring(2));               // 56.67005 double
+                                down /= 60;
+                                latitude = up + down;
+
+                                // 경도 계산
+                                up = Double.parseDouble(splitData[4].substring(0, 3));
+                                down = Double.parseDouble(splitData[4].substring(3));
+                                down /= 60;
+                                longitude = up + down;
+
+                                Log.d("TAG:test", "latitude : " + latitude);
+                                Log.d("TAG:test", "longitude : " + longitude);
+
+//                                listLatitude.add(new Double(latitude));
+//                                listLongitude.add(new Double(longitude));
+
+                                // Accuracy minimum 값일 때 저장
+                                // minLatitude, minLongitude
+
+                                if (((TextView) ((Activity) mMain).findViewById(R.id.textViewRTKState)).getText().equals("NO FIX")) {
+//                                    ((TextView) ((Activity) mMain).findViewById(R.id.textviewGNSS)).setText("3D FIX");
+                                    FIX_state = "3D FIX";
+                                }
+
+                                // 위성 개수
+//                                ((TextView) ((Activity) mMain).findViewById(R.id.textView_Satellite_num)).setText(splitData[7]);
+                                Satellite = splitData[7];
+
+                                if (((TextView) ((Activity) mMain).findViewById(R.id.btnStop)).getText().equals("고정 모드")) {
+                                    // do nothing
+                                } else if (((TextView) ((Activity) mMain).findViewById(R.id.btnStop)).getText().equals("일반 모드")) {
+//                                    ((TextView) ((Activity) mMain).findViewById(R.id.textview_Coordinate_LatLng)).setText("위도 : " + latitude + "\n" + "경도 : " + longitude);
+                                    Coordinate = latitude + "\n" + longitude;
+//                                    distance = distanceByHaversine(latitude, longitude, PUBLIC_LATITUDE, PUBLIC_LONGITUDE);
+
+                                    String strDistance = Double.toString(distance);
+
+                                    // 소수점 탐색
+                                    int dot = strDistance.indexOf(".");
+
+                                    if (distance >= 1) {
+//                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 4) + "m");
+                                        Accuracy = strDistance.substring(0, dot) + "km " + strDistance.substring(dot + 1, dot + 4) + "m";
+                                        Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(0, dot) + "km  " + strDistance.substring(dot + 1, dot + 4) + "m");
+                                    } else if ((distance >= 0.001) && (distance < 1)) {
+//                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm");
+                                        Accuracy = strDistance.substring(dot + 1, dot + 4) + "m " + strDistance.substring(dot + 4, dot + 6) + "cm";
+                                        Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(dot + 1, dot + 4) + "m  " + strDistance.substring(dot + 4, dot + 6) + "cm");
+                                    } else if (distance < 0.001) {
+//                                        ((TextView) ((Activity) mMain).findViewById(R.id.textView_Accuracy_m)).setText(strDistance.substring(dot + 4, dot + 6) + "cm");
+                                        Accuracy = strDistance.substring(dot + 4, dot + 6) + "cm";
+                                        Log.d("TAG:textviewAccuracy", "textviewAccuracy : " + strDistance.substring(dot + 4, dot + 6) + "cm");
+                                    }
+
+//                            ((TextView) ((Activity) mMain).findViewById(R.id.textviewAccuracy)).setText("" + distance);     //??????
+                                }
+
+                                Message msg = handler.obtainMessage();
+                                handler.sendMessage(msg);
+
+                                // TODO : StrToHex 초기화
+                                StrToHex = "";
+                            }
+                        }
+
+                        strHex = "";
 
 
 
@@ -189,28 +286,6 @@ public class ConnectedThread extends Thread {
 
 
 
-
-
-
-
-
-//                        if(!strBytes.substring(0,4).equals("B562")) {
-//                            B562[0] = "B562" + B562[0];
-//                        }
-//                        for(int i=1;i<B562.length;i++) {
-//                            B562[i] = "B562" + B562[i];
-//                            Log.d("TAG:readStream", "B562[" + i + "].length : " + B562[i].length());
-//                        }
-//                        if(B562[B562.length-1].length() == 222) {
-//                            // 220에서 자르고
-//                            // 그 다음 배열에 나머지 넣기
-//                            // 구현할 방법 못찾음
-//
-//                            // B5 만 제거하는 걸로 진행
-//                            B562[B562.length] = B562[B562.length-1].substring(220,222);
-//                            B562[B562.length-1] = B562[B562.length-1].substring(0,220);
-//
-//                        }
 
                         Log.d("TAG:readStream", "");
                     }
