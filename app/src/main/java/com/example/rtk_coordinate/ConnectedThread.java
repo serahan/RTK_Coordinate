@@ -93,7 +93,6 @@ public class ConnectedThread extends Thread {
         String StrToHex = "";
         String result = "";
         String strBytes = "";
-//        String[] B562;
 
         List<String> B562 = new ArrayList<String>();
 
@@ -173,7 +172,10 @@ public class ConnectedThread extends Thread {
 
                         int test = toLittleEndian(accuracy);
                         double test_double = test * 0.0001;
+                        Accuracy = Double.toString(test_double);
+
                         Log.d("TAG:readStream", "test : " + test_double);
+                        Log.d("TAG:readStream", "test : " + Accuracy);
 
 
 
