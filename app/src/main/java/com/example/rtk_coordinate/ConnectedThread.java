@@ -212,7 +212,6 @@ public class ConnectedThread extends Thread {
                             accuracyString.insert(1, ".");
                             Log.d("TAG:readStream", "StringBuffer : " + accuracyString);
 
-
                             Accuracy = accuracyString + "m";
                             Log.d("TAG:readStream", "test : " + Accuracy);
 

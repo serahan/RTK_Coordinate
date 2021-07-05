@@ -295,7 +295,9 @@
                         android:layout_weight="1"
                         android:background="@drawable/button_design"
                         android:text="일시정지"
-                        android:textSize="30sp" />
+                        android:onClick="onClickButtonStop"
+                        android:textSize="30sp"
+                        tools:ignore="OnClick" />
                 </LinearLayout>
             </LinearLayout>
 
