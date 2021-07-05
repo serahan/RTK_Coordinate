@@ -6,10 +6,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.ViewDebug;
 import android.widget.TextView;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,36 +15,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import java.io.UnsupportedEncodingException;
-
 
 public class ConnectedThread extends Thread {
     private final BluetoothSocket mmSocket;
     private final InputStream mmInStream;
     private final OutputStream mmOutStream;
-    private InputStreamReader isReader;
-    private BufferedReader reader;
 
     private double latitude = 0.0;
     private double longitude = 0.0;
 
+    private double minLatitude = 0.0;
+    private double minLongitude = 0.0;
+
     private String Satellite = "0";
     private String Coordinate = "위도 : \n경도 : ";
-    private String Accuracy = "0m";
     private String RTKstate = "Invalid";
+    private String Accuracy = "0m";
+    private int minAccuracy = 0;
 
     static Context mMain;
-    List<Double> listLatitude = new ArrayList<>();
-    List<Double> listLongitude = new ArrayList<>();
-
-    // Byte로 변경
-    ByteArrayInputStream byteArrayInputStream;
-    ByteArrayOutputStream byteArrayOutputStream;
+    final static MainActivity mainActivity = new MainActivity();
 
     public static void InitExam(Context main) {
         mMain = main;
@@ -56,9 +47,6 @@ public class ConnectedThread extends Thread {
         mmSocket = socket;
         InputStream tmpIn = null;       // 읽는 데 사용
         OutputStream tmpOut = null;     // 쓰는 데 사용
-
-//        ByteArrayInputStream tmpIn2 = null;
-//        ByteArrayInputStream tmpOut2 = null;
 
         // Get the input and output streams, using temp objects because
         // member streams are final
@@ -75,10 +63,10 @@ public class ConnectedThread extends Thread {
 
     final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            ((TextView) ((Activity) mMain).findViewById(R.id.textViewRTKState)).setText(RTKstate);
-            ((TextView) ((Activity) mMain).findViewById(R.id.textViewSatellite)).setText(Satellite);
-            ((TextView) ((Activity) mMain).findViewById(R.id.textViewCoordinate)).setText(Coordinate);
-            ((TextView) ((Activity) mMain).findViewById(R.id.textViewAccuracy)).setText(Accuracy);
+                ((TextView) ((Activity) mMain).findViewById(R.id.textViewRTKState)).setText(RTKstate);
+                ((TextView) ((Activity) mMain).findViewById(R.id.textViewSatellite)).setText(Satellite);
+                ((TextView) ((Activity) mMain).findViewById(R.id.textViewCoordinate)).setText(Coordinate);
+                ((TextView) ((Activity) mMain).findViewById(R.id.textViewAccuracy)).setText(Accuracy);
         }
     };
 
@@ -237,8 +225,31 @@ public class ConnectedThread extends Thread {
 
                                 Coordinate = "위도 : " + latitude + "\n경도 : " + longitude;
 
+                                if(minAccuracy == 0) {
+                                    minAccuracy = accuracyInt;
+                                }
+                                if(minAccuracy > accuracyInt) {
+                                    minAccuracy = accuracyInt;
+                                    minLatitude = latitude;
+                                    minLongitude = longitude;
+
+                                    if(mainActivity.stateStop == true) {
+                                        Message msg = handler.obtainMessage();
+                                        handler.sendMessage(msg);
+                                    }
+                                }
+
+//                                if((minLatitude == 0.0) && (minLongitude == 0.0)) {
+//                                    minLatitude = latitude;
+//                                    minLongitude = longitude;
+//                                    minAccuracy = Accuracy;
+//                                }
+
                                 Log.d("TAG:test", "latitude : " + latitude);
                                 Log.d("TAG:test", "longitude : " + longitude);
+
+                                // 일시정지 시, 정확도 min값으로 변경되었을 때
+
 
                                 // TODO : Accuracy minimum 값일 때 저장
                                 // minLatitude, minLongitude
@@ -264,8 +275,10 @@ public class ConnectedThread extends Thread {
 
 
                                 // UI 기록
-                                Message msg = handler.obtainMessage();
-                                handler.sendMessage(msg);
+                                if(mainActivity.stateStop == false) {
+                                    Message msg = handler.obtainMessage();
+                                    handler.sendMessage(msg);
+                                }
                             }
                         }
 
@@ -298,49 +311,6 @@ public class ConnectedThread extends Thread {
         }
     }
 
-    public String toHex(String arg) {
-        return String.format("%x", new BigInteger(1, arg.getBytes()));
-    }
-
-    // 1번
-//    public static double distanceByHaversine(double lat1, double longi1, double lat2, double longi2) {
-//        // 공식에서는 지구가 완전한 구형이라고 가정
-//        // 실제 지구는 적도 쪽이 좀 더 길쭉한 타원형이라 완벽히 정확하다 할 수 없음
-//        double distance;
-//        double radius = 6371;   // 지구 반지름(km)
-//        double toRadian = Math.PI / 180;
-//
-//        double deltaLatitude = Math.abs(lat1 - lat2) * toRadian;
-//        double deltaLongitude = Math.abs(longi1 - longi2) * toRadian;
-//
-//        double sinDeltaLat = Math.sin(deltaLatitude / 2);
-//        double sinDeltaLng = Math.sin(deltaLongitude / 2);
-//        double squareRoot = Math.sqrt(sinDeltaLat * sinDeltaLat + Math.cos(lat1 * toRadian) * Math.cos(lat2 * toRadian) * sinDeltaLng * sinDeltaLng);
-//
-//        distance = 2 * radius * Math.asin(squareRoot);
-//
-//        Log.d("TAG:distance", "distance : " + distance);
-//
-//        return distance;
-//    }
-
-    // 2번
-    public static double distanceByHaversine(double lat1, double longi1, double lat2, double longi2) {
-        double deg2radMultiplier = Math.PI / 180;
-        lat1 = lat1 * deg2radMultiplier;
-        longi1 = longi1 * deg2radMultiplier;
-        lat2 = lat2 * deg2radMultiplier;
-        longi2 = longi2 * deg2radMultiplier;
-
-        double radius = 6378.137;
-        double dlng = longi2 - longi1;
-        double distance = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(dlng)) * radius;
-
-        Log.d("TAG:distance", "distance : " + distance);
-
-        return distance;
-    }
-
     // byte 배열을 16진수 String으로 변환
     public static String byteToHexString(byte[] byteArray, int bytes) {
         StringBuffer sb = new StringBuffer();
@@ -352,28 +322,6 @@ public class ConnectedThread extends Thread {
             sb.append(String.format("%02x", b).toUpperCase());
         }
         return sb.toString();
-    }
-
-    // Int를 Byte로 변경하여 진행하려고 하였으나 불가. byteArr(intArr)의 배열 개수 = 4 로 인식함.
-    public static byte[] intToByteArray(int value) {
-        byte[] byteArr = new byte[4];
-        byteArr[3] = (byte)(value >> 24);
-        byteArr[2] = (byte)(value >> 16);
-        byteArr[1] = (byte)(value >> 8);
-        byteArr[0] = (byte)(value);
-        Log.d("TAG:readStream", "intArr : " + byteArr[3] + " " + byteArr[2] + " " + byteArr[1] + " " + byteArr[0]);
-        return byteArr;
-    }
-
-    // 다른 사람 코드 // 썼더니 깨짐
-    static String stringToHex(String string) {
-        StringBuilder buf = new StringBuilder(200);
-        for (char ch : string.toCharArray()) {
-            if (buf.length() > 0)
-                buf.append(' ');
-            buf.append(String.format("%02x", (int) ch));
-        }
-        return buf.toString();
     }
 
     private static String hexToAscii(String hexStr) {

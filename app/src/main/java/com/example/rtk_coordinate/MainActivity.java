@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private final static int REQUEST_ENABLE_BT = 1;
     BluetoothSocket btSocket = null;
     ConnectedThread connectedThread;
+    public static boolean stateStop = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +118,14 @@ public class MainActivity extends AppCompatActivity {
                 deviceAddressArray.add(deviceHardwareAddress);
             }
         }
-
     }
 
     public void onClickButtonStop(View view) {
-
+        if(stateStop == false) {
+            stateStop = true;
+        } else {
+            stateStop = false;
+        }
     }
 
     public class myOnItemClickListener implements AdapterView.OnItemClickListener {
