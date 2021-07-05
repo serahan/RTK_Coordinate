@@ -137,9 +137,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="10dp"
-                            android:layout_weight="2.8"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
+                            android:layout_weight="2.5"
                             android:text="RTK State"
                             android:textSize="24sp" />
 
@@ -150,10 +148,11 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginBottom="10dp"
-                            android:layout_weight="6.8"
+                            android:layout_weight="7"
                             android:background="#E8E8E8"
-                            android:padding="10dp"
-                            android:textSize="20sp" />
+                            android:gravity="center"
+                            android:textColor="#000000"
+                            android:textSize="48sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -206,8 +205,6 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="2.5"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
                         android:text="Coordinatie"
                         android:textSize="24sp" />
 
@@ -221,7 +218,6 @@
                         android:layout_weight="7.3"
                         android:background="#FFEBDB"
                         android:gravity="left"
-                        android:padding="10dp"
                         android:textColor="#000000"
                         android:textSize="24sp" />
                 </LinearLayout>
@@ -248,8 +244,6 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_weight="2.5"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
                             android:text="Accuracy"
                             android:textSize="24sp" />
 
@@ -263,7 +257,7 @@
                             android:layout_weight="7"
                             android:background="#E3F5FF"
                             android:gravity="center"
-                            android:text="---.--m"
+                            android:text="0m"
                             android:textAlignment="center"
                             android:textColor="#000000"
                             android:textSize="50sp" />
