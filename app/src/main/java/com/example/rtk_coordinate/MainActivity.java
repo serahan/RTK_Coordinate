@@ -90,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
         deviceAddressArray = new ArrayList<>();
         listView.setAdapter(btArrayAdapter);
 
-        btnStop.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO
-            }
-        });
+//        btnStop.setOnClickListener(new Button.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // TODO
+//            }
+//        });
 
         // 통신
         listView.setOnItemClickListener(new myOnItemClickListener());
