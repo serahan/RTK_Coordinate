@@ -211,10 +211,24 @@ public class ConnectedThread extends Thread {
                                 accuracyInt = toLittleEndian(accuracy);
                             }
 
+//                            StringBuffer accuracyString = new StringBuffer();
+//                            accuracyString.append(Integer.toString(accuracyInt));
+//                            accuracyString.insert(accuracyString.length() - 4, ".");
+
+                            int test = toLittleEndian(accuracy);
+//                            double test_double = test * 0.0001;
+
+                            String test_String = Integer.toString(test);
+                            if (test_String.length() <= 5) {
+                                int i = test_String.length();
+                                for(; i < 5; i++) {
+                                    test_String = 0 + test_String;
+                                }
+                            }
+
                             StringBuffer accuracyString = new StringBuffer();
-                            accuracyString.append(Integer.toString(accuracyInt));
-                            accuracyString.insert(accuracyString.length() - 4, ".");
-                            Log.d("TAG:readStream", "StringBuffer : " + accuracyString);
+                            accuracyString.append(test_String);
+                            accuracyString.insert(accuracyString.length()-4, ".");
 
                             Accuracy = accuracyString + "m";
                             Log.d("TAG:readStream", "test : " + Accuracy);
