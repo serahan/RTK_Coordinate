@@ -120,10 +120,6 @@ public class ConnectedThread extends Thread {
 //                        Log.d("TAG:readStream", "B562 length : " + B562.length());
                         Log.d("TAG:readStream", "B562 size() : " + B562.size());
 
-                        // 뭔가 이상, 코드 이해 불가.
-//                        if (!strBytes.substring(0, 4).equals("B562")) {
-//                            B562.set(0, "B562" + B562.get(0));
-//                        }
                         for (int i = 1; i < B562.size(); i++) {
                             B562.set(i, "B562" + B562.get(i));
                             Log.d("TAG:readStream", "B562[" + i + "].length : " + B562.get(i).length());
@@ -170,10 +166,6 @@ public class ConnectedThread extends Thread {
                             strBytes = "";
                         }
 
-//                        if (!B562.get(B562.size() - 1).contains("0A")) {
-//                            strBytes = B562.get(B562.size() - 1);
-//                        }
-
                         // 21-07-02 220 Bytes 제거
                         // UBX + GNGNS 제대로 한문장 들어온 것 찾기
                         for (int i = B562.size() - 1; i > 0; i--) {
@@ -188,7 +180,6 @@ public class ConnectedThread extends Thread {
                         Log.d("TAG:readStream", "strHex : " + strHex);
 
                         B562.clear();
-                        // TODO : B562.clear() 뒤로 보내고 다른 초기화 필요한 배열들 초기화 진행
 
                         // GNGGA 파싱 및 분리
                         // UBX는 파싱 그대로 진행
@@ -213,7 +204,12 @@ public class ConnectedThread extends Thread {
 
                             // Accuracy 추출
                             String accuracy = splitResult[0].substring(60, 68);
-                            int accuracyInt = toLittleEndian(accuracy);
+                            int accuracyInt = 0;
+                            if(accuracy.equals("FFFFFFFF")) {
+                                throw new NumberFormatException();
+                            } else {
+                                accuracyInt = toLittleEndian(accuracy);
+                            }
 
                             StringBuffer accuracyString = new StringBuffer();
                             accuracyString.append(Integer.toString(accuracyInt));
@@ -243,7 +239,10 @@ public class ConnectedThread extends Thread {
                                 down /= 60;
                                 longitude = up + down;
 
-                                Coordinate = "위도 : " + latitude + "\n경도 : " + longitude;
+                                Coordinate =  latitude + "\n" + longitude;
+
+                                // 일시정지 시, 정확도 min값으로 변경되었을 때
+                                // minLatitude, minLongitude
 
                                 if (mainActivity.stateStop == true) {
                                     Log.d("TAG:Accuracy", "Accuracy start");
@@ -263,20 +262,8 @@ public class ConnectedThread extends Thread {
                                     }
                                 }
 
-//                                if((minLatitude == 0.0) && (minLongitude == 0.0)) {
-//                                    minLatitude = latitude;
-//                                    minLongitude = longitude;
-//                                    minAccuracy = Accuracy;
-//                                }
-
                                 Log.d("TAG:readStream", "latitude : " + latitude);
                                 Log.d("TAG:readStream", "longitude : " + longitude);
-
-                                // 일시정지 시, 정확도 min값으로 변경되었을 때
-
-
-                                // TODO : Accuracy minimum 값일 때 저장
-                                // minLatitude, minLongitude
 
                                 // RTK 상태
                                 if (splitData[6].equals("0")) {
@@ -318,13 +305,24 @@ public class ConnectedThread extends Thread {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            catch (StringIndexOutOfBoundsException e) {
+            } catch (StringIndexOutOfBoundsException e) {
                 e.printStackTrace();
                 strBytes = "";
                 strHex = "";
                 Log.d("TAG:readStream", "Error : StringindexOutOfBoundsException");
                 Log.d("TAG:Error", "Error : StringindexOutOfBoundsException");
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+                strBytes = "";
+                strHex = "";
+                Log.d("TAG:readStream", "Error : ArrayIndexOutOfBoundsException");
+                Log.d("TAG:Error", "Error : ArrayIndexOutOfBoundsException");
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                strBytes = "";
+                strHex = "";
+                Log.d("TAG:readStream", "Error : NumberFormatException");
+                Log.d("TAG:Error", "Error : NumberFormatException");
             }
         }
     }
@@ -349,9 +347,6 @@ public class ConnectedThread extends Thread {
     // byte 배열을 16진수 String으로 변환
     public static String byteToHexString(byte[] byteArray, int bytes) {
         StringBuffer sb = new StringBuffer();
-        // byteArray.length인 bytes를 byte[] 로 변환
-//        byte[] intArr;
-//        intArr = intToByteArray(bytes);
 
         for (byte b : byteArray) {
             sb.append(String.format("%02x", b).toUpperCase());
